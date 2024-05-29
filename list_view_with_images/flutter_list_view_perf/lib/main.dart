@@ -68,7 +68,7 @@ class TestPage extends StatelessWidget {
                   await scrollController.animateTo(1000.0 * (100 + 16),
                       duration: DURATION_SCROOL, curve: Curves.linear);
                 },
-                child: null,
+                child: const Text('Start Scrolling'),
               ),
             ),
           ),
