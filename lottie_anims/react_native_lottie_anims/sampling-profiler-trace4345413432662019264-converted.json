@@ -1,0 +1,35 @@
+[{
+    "ts": 417726212986,
+    "pid": 26376,
+    "tid": 26708,
+    "ph": "B",
+    "name": "[root]",
+    "cat": "root",
+    "args": {
+        "name": "[root]",
+        "category": "root",
+        "url": null,
+        "line": null,
+        "column": null,
+        "params": null,
+        "allocatedCategory": "root",
+        "allocatedName": "[root]"
+    }
+},{
+    "ts": 417743041011,
+    "pid": 26376,
+    "tid": 26708,
+    "ph": "E",
+    "name": "[root]",
+    "cat": "root",
+    "args": {
+        "name": "[root]",
+        "category": "root",
+        "url": null,
+        "line": null,
+        "column": null,
+        "params": null,
+        "allocatedCategory": "root",
+        "allocatedName": "[root]"
+    }
+}]
