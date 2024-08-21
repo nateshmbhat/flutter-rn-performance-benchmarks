@@ -1,86 +1,45 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import React, {Component, createRef} from 'react';
 import {
   FlatList,
   StyleSheet,
   Text,
   View,
-  Animated,
-  Easing,
-  Button,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Animated, {
+  Easing,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withRepeat,
+} from 'react-native-reanimated';
 
 const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
 
-let data = Array(1001);
-for (var i = 0; i < data.length; i++) {
-  let color =
-    'rgb(' +
-    Math.floor(Math.random() * 256) +
-    ',' +
-    Math.floor(Math.random() * 256) +
-    ',' +
-    Math.floor(Math.random() * 256) +
-    ')';
-  data[i] = {
-    key: String(i),
-    color: color,
-  };
-}
+let data = Array(1001)
+  .fill(null)
+  .map((_, i) => {
+    let color =
+      'rgb(' +
+      Math.floor(Math.random() * 256) +
+      ',' +
+      Math.floor(Math.random() * 256) +
+      ',' +
+      Math.floor(Math.random() * 256) +
+      ')';
+    return {
+      key: String(i),
+      color: color,
+    };
+  });
 
 let currentOffset = 0;
 let intervalTime = 300;
 const flatListRef = createRef();
 
 export default class FlatListBasics extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity style={[{marginTop: 25}]} />
-        <Button
-          style={[{position: 'absolute', top: 50, left: 0}]}
-          onPress={this._startAutoPlay}
-          title="Start scrool"
-          color="grey"
-        />
-        <FlatList
-          ref={flatListRef}
-          testID={'long_list'}
-          accessibilityLabel={'long_list'}
-          data={data}
-          ItemSeparatorComponent={FlatListItemSeparator}
-          keyExtractor={item => item.key}
-          renderItem={({item}) => {
-            let label = item.key;
-            let spinValue = new Animated.Value(0);
-            let spin = spinValue.interpolate({
-              inputRange: [0, 360],
-              outputRange: ['0deg', '360deg'],
-            });
-            return (
-              <CustomRow
-                index={item.key}
-                color={item.color}
-                label={label}
-                spin={spin}
-                spinValue={spinValue}>
-                {' '}
-              </CustomRow>
-            );
-          }}
-        />
-      </View>
-    );
-  }
-
   _scroolOffset = () => {
     if (currentOffset >= data.length * (styles.item.height + 16)) {
       this._stopAutoPlay();
@@ -89,7 +48,7 @@ export default class FlatListBasics extends Component {
       offset: currentOffset,
       animated: true,
     });
-    currentOffset = currentOffset + 410;
+    currentOffset += 410;
   };
 
   _startAutoPlay = () => {
@@ -109,6 +68,33 @@ export default class FlatListBasics extends Component {
 
   componentWillUnmount() {
     this._stopAutoPlay();
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity style={[{marginTop: 25}]} />
+        <Button
+          style={[{position: 'absolute', top: 50, left: 0}]}
+          onPress={this._startAutoPlay}
+          title="Start scrool"
+          color="grey"
+        />
+        <FlatList
+          ref={flatListRef}
+          testID={'long_list'}
+          accessibilityLabel={'long_list'}
+          data={data}
+          ItemSeparatorComponent={FlatListItemSeparator}
+          keyExtractor={item => item.key}
+          renderItem={({item}) => {
+            return (
+              <CustomRow index={item.key} color={item.color} label={item.key} />
+            );
+          }}
+        />
+      </View>
+    );
   }
 }
 
@@ -143,58 +129,40 @@ function getImage(num) {
   return IMAGES['image' + (num % 20)];
 }
 
-class CustomRow extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      color: props.color,
-      index: props.index,
-      label: props.label,
-      spin: props.spin,
-      spinValue: props.spinValue,
+function CustomRow({index, color, label}) {
+  const spinValue = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{rotate: `${spinValue.value}deg`}],
     };
-  }
+  });
 
-  render() {
-    return (
-      <View
-        style={[styles.item_container, {backgroundColor: this.state.color}]}>
-        <FastImage
-          style={styles.image}
-          source={getImage(this.state.index)}
-          resizeMode={'stretch'}
-        />
-        <AnimatedFastImage
-          style={{
-            transform: [{rotate: this.state.spin}],
-            height: 100,
-            width: 100,
-          }}
-          source={getImage(this.state.index)}
-          resizeMode={'stretch'}
-          fadeDuration={0}
-        />
-        <Text accessibilityLabel={this.state.label} style={styles.item}>
-          {this.state.index}
-        </Text>
-      </View>
+  React.useEffect(() => {
+    spinValue.value = withRepeat(
+      withTiming(360, {duration: 5000, easing: Easing.linear}),
+      -1,
     );
-  }
+  }, []);
 
-  componentDidMount() {
-    Animated.loop(
-      Animated.timing(this.state.spinValue, {
-        toValue: 360,
-        duration: 5000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    ).start();
-  }
-
-  componentWillUnmount() {
-    this.state.spinValue.stopAnimation();
-  }
+  return (
+    <View style={[styles.item_container, {backgroundColor: color}]}>
+      <FastImage
+        style={styles.image}
+        source={getImage(index)}
+        resizeMode={'stretch'}
+      />
+      <AnimatedFastImage
+        style={[styles.image, animatedStyle]}
+        source={getImage(index)}
+        resizeMode={'stretch'}
+        fadeDuration={0}
+      />
+      <Text accessibilityLabel={label} style={styles.item}>
+        {index}
+      </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -217,5 +185,3 @@ const styles = StyleSheet.create({
     height: 100,
   },
 });
-
-//export default App;
