@@ -99,7 +99,7 @@ class _GridRotareItemState extends State<GridRotareItem>
       vsync: this,
       duration: Duration(seconds: 5),
     );
-    animationController.repeat();
+    animationController.repeat(reverse: true);
   }
 
   @override

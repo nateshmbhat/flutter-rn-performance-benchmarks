@@ -3,6 +3,7 @@
         android:label="flutter_image_anims_perf"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <profileable android:shell="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
