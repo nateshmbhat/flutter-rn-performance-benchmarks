@@ -1,6 +1,5 @@
 # ListView benchmark results 
 
-
 ## Android 
 
 ### Flutter:
@@ -27,13 +26,19 @@
 
 ### Flutter:
 
-- Memory: 48 MB (remained same when scrolling)
+- Memory: 
+	iPhone8: 48 MB (remained same when scrolling)
+	iPhone15: 93 MB (remained same when scrolling)
 - CPU: 40-60% (remained same when scrolling)
 - No jank or framedrops on rapid scrolling
+- Archive size: 71.5 MB (Build Time : 30 seconds)
 
 ### React Native:
 
-- Memory: 1.05 GB and drops to 453 MB on scrolling.
+- Memory: 
+	- iPhone8 : 1.05 GB and drops to ~453 MB on scrolling.
+	- iPhone15 : 1.12 GB and drops to ~430 MB on scrolling.
 - CPU: 120–140% for first 5 seconds, then drops to ~50% when not scrolling. Spikes to 140-150% on scrolling.
 - No framedrops but sometimes abruptly stops the scrolling when scrolled rapidly (user has to scroll again)
+- Archive size: 112.3 MB (Build Time : 318 seconds)
  

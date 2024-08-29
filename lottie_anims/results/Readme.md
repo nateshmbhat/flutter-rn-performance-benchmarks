@@ -22,13 +22,21 @@
 
 ### Flutter:
 
-- Memory: 160-165 MB
-- CPU: Varies between 130-150%
+- Memory: 
+	- iPhone8 : 150-165 MB
+	- iPhone15 : Increased up to 255 MB and remained at 255 MB
+- CPU: 
+	- iPhone8 : 120-140% 
+	- iPhone15 : 50-70%
 - No jank or framedrops visible
+- Archive size: 72.9 MB (Build Time : 29 seconds)
 
 ### React Native:
 
-- Memory: Increased slowly upto 120 MB and remained at 120 MB
-- CPU: 100% initially, then dropped to 50-60% 
+- Memory: Increased slowly upto 125 MB and remained at 125 MB
+- CPU: 
+	- iPhone8 : 100% for 6 seconds then reduces to 50-60%   
+	- iPhone15 : 60-80% 
 - No jank or framedrops visible
+- Archive size: 133.5 MB (Build Time : 304 seconds)
  
